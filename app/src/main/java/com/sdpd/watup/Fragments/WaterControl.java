@@ -12,12 +12,16 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sdpd.watup.R;
 
 public class WaterControl extends Fragment {
 
     private SeekBar seekBar;
     private TextView textView;
+
+    private DatabaseReference databaseReference;
 
     public WaterControl() {
         // Required empty public constructor
@@ -35,6 +39,8 @@ public class WaterControl extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_water_control, container, false);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("devices").child("device1").child("valve").child("percentage");
 
         seekBar = (SeekBar) view.findViewById(R.id.seekBar1);
         textView = (TextView) view.findViewById(R.id.textView1);
@@ -56,6 +62,8 @@ public class WaterControl extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 textView.setText("Control Level: " + progress + "/" + seekBar.getMax());
+
+                databaseReference.setValue(progress*20);
             }
         });
 

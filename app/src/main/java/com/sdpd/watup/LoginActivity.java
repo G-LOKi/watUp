@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         attachID();
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("102975181927-aontu1jqm32ghf8d7jvtd3q5fnc9018b.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -182,23 +182,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void checkUser(String UID){
-        usersDbRef = FirebaseDatabase.getInstance().getReference().child("users");
-        usersDbRef.child("df").setValue("apple");
+        usersDbRef = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid());
 
-
-        Toast.makeText(LoginActivity.this, usersDbRef.toString(), Toast.LENGTH_SHORT).show();
-        usersDbRef.child("df").addValueEventListener(new ValueEventListener() {
+        usersDbRef.child("email").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Toast.makeText(LoginActivity.this, "yelo", Toast.LENGTH_SHORT).show();
-                if (dataSnapshot!=null){
+                if (dataSnapshot.getValue()!=null){
                     Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(i);
                 }else{
+
                     usersDbRef.child("name").setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
                     usersDbRef.child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                    usersDbRef.child("UID").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    usersDbRef.child("userUID").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(i);
